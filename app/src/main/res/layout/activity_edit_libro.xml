@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.EditLibroActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/edtNombreLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del libro" />
+
+        <EditText
+            android:id="@+id/edtAutorLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Autor del libro" />
+
+        <EditText
+            android:id="@+id/edtEditorialLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Editorial del libro" />
+
+        <EditText
+            android:id="@+id/edtSinopsisLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sinopsis del libro" />
+
+        <EditText
+            android:id="@+id/edtIsbnLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ISBN del libro" />
+
+        <EditText
+            android:id="@+id/edtCalificacionLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calificacion del libro" />
+
+        <EditText
+            android:id="@+id/edtImagenLibro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Imagen del libro" />
+
+        <Button
+            android:id="@+id/btnGuardarLibro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar" />
+
+    </LinearLayout>
+
+</ScrollView>
