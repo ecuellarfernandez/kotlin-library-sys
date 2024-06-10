@@ -29,8 +29,9 @@ class MainActivity : AppCompatActivity(), LibroAdapter.OnLibroClickListener {
         setContentView(binding.root)
 
         generoId = intent.getIntExtra("generoId", -1)
+        val generoNombre = intent.getStringExtra("generoNombre") ?: ""
         if (generoId != -1) {
-            title = "Libros del género $generoId"
+            title = generoNombre
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
