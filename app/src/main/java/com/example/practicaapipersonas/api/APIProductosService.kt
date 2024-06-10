@@ -38,9 +38,9 @@ interface APILibreriaService {
     @DELETE("generos/{id}")
     fun deleteGenero(@Path("id") id: Int): Call<Void>
 
-    @POST("libro-generos")
+    @HTTP(method = "POST", path = "libro-generos", hasBody = true)
     fun addGeneroToLibro(@Body libroGenero: LibroGenero): Call<Void>
 
-    @DELETE("libro-generos")
+    @HTTP(method = "DELETE", path = "libro-generos", hasBody = true)
     fun removeGeneroFromLibro(@Body libroGenero: LibroGenero): Call<Void>
 }

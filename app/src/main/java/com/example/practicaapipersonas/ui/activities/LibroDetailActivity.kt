@@ -8,6 +8,7 @@ import com.example.practicaapipersonas.databinding.ActivityLibroDetailBinding
 import com.example.practicaapipersonas.models.Libro
 import com.example.practicaapipersonas.repositories.LibroRepository
 import com.example.practicaapipersonas.ui.viewmodels.MainViewModel
+import kotlin.math.log
 
 class LibroDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLibroDetailBinding
@@ -31,6 +32,11 @@ class LibroDetailActivity : AppCompatActivity() {
         binding.lblEditorialLibro.text = libro.editorial
         binding.lblSinopsisLibro.text = libro.sinopsis
         binding.lblIsbnLibro.text = libro.isbn
+        if (libro.generos.isEmpty()) {
+            binding.lblGenerosLibroDetail.text = "Todavía no se ha asignado ningún género"
+        } else {
+            binding.lblGenerosLibroDetail.text = libro.generos.joinToString(", ") { it.nombre }
+        }
         val calificaciontxt = libro.calificacion.toString().toFloat().toInt()
         binding.lblCalificacionLibro.text = "${calificaciontxt}/10"
         Glide.with(this)
@@ -65,6 +71,11 @@ class LibroDetailActivity : AppCompatActivity() {
             binding.lblEditorialLibro.text = libro.editorial
             binding.lblSinopsisLibro.text = libro.sinopsis
             binding.lblIsbnLibro.text = libro.isbn
+            if (libro.generos.isEmpty()) {
+                binding.lblGenerosLibroDetail.text = "Todavía no se ha asignado ningún género"
+            } else {
+                binding.lblGenerosLibroDetail.text = libro.generos.joinToString(", ") { it.nombre }
+            }
             val calificaciontxt = libro.calificacion.toString().toFloat().toInt()
             binding.lblCalificacionLibro.text = "${calificaciontxt}/10"
             Glide.with(this)

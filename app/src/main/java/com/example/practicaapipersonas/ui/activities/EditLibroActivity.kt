@@ -2,18 +2,24 @@ package com.example.practicaapipersonas.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.practicaapipersonas.databinding.ActivityEditLibroBinding
+import com.example.practicaapipersonas.models.Genero
 import com.example.practicaapipersonas.models.Libro
+import com.example.practicaapipersonas.models.LibroGenero
+import com.example.practicaapipersonas.repositories.LibroGeneroRepository
 import com.example.practicaapipersonas.repositories.LibroRepository
+import com.example.practicaapipersonas.ui.viewmodels.GeneroViewModel
 import com.example.practicaapipersonas.ui.viewmodels.MainViewModel
 
 class EditLibroActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditLibroBinding
     private var libro: Libro? = null
     private val model: MainViewModel by viewModels()
+    private val generoViewModel: GeneroViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,38 @@ class EditLibroActivity : AppCompatActivity() {
             binding.edtIsbnLibro.setText("")
         }
 
+        generoViewModel.generoList.observe(this) { generos ->
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, generos)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerGeneros.adapter = adapter
+        }
+        generoViewModel.fetchListaGeneros()
+
+        binding.btnAddGenero.setOnClickListener {
+            val selectedGenero = binding.spinnerGeneros.selectedItem as Genero
+            val libroGenero = LibroGenero(libro!!.id!!, selectedGenero.id!!)
+            LibroGeneroRepository.addGeneroToLibro(libroGenero,
+                success = {
+                    updateLibroAndReturn()
+                },
+                failure = { throwable ->
+                    throwable.printStackTrace()
+                })
+        }
+
+        binding.btnDeleteGeneroEdit.isEnabled = libro != null
+        binding.btnDeleteGeneroEdit.setOnClickListener {
+            val selectedGenero = binding.spinnerGeneros.selectedItem as Genero
+            val libroGenero = LibroGenero(libro!!.id!!, selectedGenero.id!!)
+            LibroGeneroRepository.removeGeneroFromLibro(libroGenero,
+                success = {
+                    updateLibroAndReturn()
+                },
+                failure = { throwable ->
+                    throwable.printStackTrace()
+                })
+        }
+
         binding.btnGuardarLibro.setOnClickListener {
             val nombre = binding.edtNombreLibro.text.toString()
             val autor = binding.edtAutorLibro.text.toString()
@@ -46,7 +84,6 @@ class EditLibroActivity : AppCompatActivity() {
             val imagen = binding.edtImagenLibro.text.toString()
             val isbn = binding.edtIsbnLibro.text.toString()
             val calificacion = binding.edtCalificacionLibro.text.toString().toFloat()
-            val generos = libro?.generos ?: emptyList()
 
             if (nombre.isEmpty() || autor.isEmpty() || editorial.isEmpty() || sinopsis.isEmpty() || imagen.isEmpty() || isbn.isEmpty()) {
                 Toast.makeText(this, "Completa todos los campos...", Toast.LENGTH_SHORT).show()
@@ -61,22 +98,10 @@ class EditLibroActivity : AppCompatActivity() {
                 libro?.sinopsis = sinopsis
                 libro?.isbn = isbn
                 libro?.calificacion = calificacion
-                libro?.generos = libro?.generos ?: emptyList()
-                LibroRepository.updateLibro(libro!!, id = libro!!.id!!,
-                    success = {
-                        model.fetchListaLibros()
-                        val intent = Intent().apply{
-                            putExtra("libro", libro)
-                        }
-                        setResult(RESULT_OK, intent)
-                        finish()
-                    },
-                    failure = { throwable ->
-                        throwable.printStackTrace()
-                        Toast.makeText(this, "Error ACTUALIZANDO libro", Toast.LENGTH_SHORT).show()
-                    })
+
+                updateLibroAndReturn()
             } else {
-                val newLibro = Libro(nombre, autor, editorial, imagen, sinopsis, isbn, calificacion, generos)
+                val newLibro = Libro(nombre, autor, editorial, imagen, sinopsis, isbn, calificacion, emptyList())
                 LibroRepository.insertLibro(newLibro,
                     success = {
                         model.fetchListaLibros()
@@ -88,5 +113,29 @@ class EditLibroActivity : AppCompatActivity() {
                     })
             }
         }
+    }
+
+    private fun updateLibroAndReturn() {
+        LibroRepository.updateLibro(libro!!, id = libro!!.id!!,
+            success = {
+                // Fetch the updated book to get the updated genres
+                LibroRepository.getLibroById(libro!!.id!!,
+                    success = { updatedLibro ->
+                        model.fetchListaLibros()
+                        val intent = Intent().apply{
+                            putExtra("libro", updatedLibro)
+                        }
+                        setResult(RESULT_OK, intent)
+                        finish()
+                    },
+                    failure = { throwable ->
+                        throwable.printStackTrace()
+                        Toast.makeText(this, "Error OBTENIENDO libro actualizado", Toast.LENGTH_SHORT).show()
+                    })
+            },
+            failure = { throwable ->
+                throwable.printStackTrace()
+                Toast.makeText(this, "Error ACTUALIZANDO libro", Toast.LENGTH_SHORT).show()
+            })
     }
 }

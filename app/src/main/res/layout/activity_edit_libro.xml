@@ -53,6 +53,23 @@
             android:layout_height="wrap_content"
             android:hint="Imagen del libro" />
 
+        <Spinner
+            android:id="@+id/spinnerGeneros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnAddGenero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Añadir género" />
+
+        <Button
+            android:id="@+id/btnDeleteGeneroEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar género" />
+
         <Button
             android:id="@+id/btnGuardarLibro"
             android:layout_width="wrap_content"
