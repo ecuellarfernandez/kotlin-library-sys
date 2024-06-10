@@ -42,6 +42,9 @@ class EditLibroActivity : AppCompatActivity() {
             binding.edtEditorialLibro.setText("")
             binding.edtSinopsisLibro.setText("")
             binding.edtIsbnLibro.setText("")
+            binding.spinnerGeneros.visibility = android.view.View.GONE
+            binding.btnAddGenero.visibility = android.view.View.GONE
+            binding.btnDeleteGeneroEdit.visibility = android.view.View.GONE
         }
 
         generoViewModel.generoList.observe(this) { generos ->
@@ -118,7 +121,6 @@ class EditLibroActivity : AppCompatActivity() {
     private fun updateLibroAndReturn() {
         LibroRepository.updateLibro(libro!!, id = libro!!.id!!,
             success = {
-                // Fetch the updated book to get the updated genres
                 LibroRepository.getLibroById(libro!!.id!!,
                     success = { updatedLibro ->
                         model.fetchListaLibros()
