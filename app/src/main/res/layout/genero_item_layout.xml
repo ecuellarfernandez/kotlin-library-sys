@@ -20,18 +20,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnEditarLibroItem"
+        android:id="@+id/btnEditarGeneroItem"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
         android:backgroundTint="#2196F3"
-        android:insetLeft="0dp"
-        android:insetRight="0dp"
         app:icon="@android:drawable/ic_menu_edit"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
-        app:iconSize="25dp"
-        app:iconTint="#FFFFFF" />
+        app:iconSize="25dp" />
 
     <Button
         android:id="@+id/btnDeleteGeneroItem"
