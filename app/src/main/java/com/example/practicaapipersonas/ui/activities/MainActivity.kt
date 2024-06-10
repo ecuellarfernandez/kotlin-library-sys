@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practicaapipersonas.R
 import com.example.practicaapipersonas.databinding.ActivityMainBinding
+import com.example.practicaapipersonas.models.Genero
 import com.example.practicaapipersonas.models.Libro
 import com.example.practicaapipersonas.repositories.LibroRepository
 import com.example.practicaapipersonas.ui.adapters.LibroAdapter
@@ -26,13 +27,17 @@ class MainActivity : AppCompatActivity(), LibroAdapter.OnLibroClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        generoId = intent.getIntExtra("generoId", -1)
+        if (generoId != -1) {
+            title = "Libros del género $generoId"
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        generoId = intent.extras?.getInt("generoId")
 
         setupEventListeners()
         setupRecyclerView()
@@ -75,9 +80,11 @@ class MainActivity : AppCompatActivity(), LibroAdapter.OnLibroClickListener {
 
     private fun setupViewModelListeners() {
         model.libroList.observe(this) { libros ->
-            val filteredLibros = generoId?.let { id ->
-                libros.filter { libro -> libro.generos.any { genero -> genero.id == id } }
-            } ?: libros
+            val filteredLibros = if (generoId != -1) {
+                libros.filter { libro -> libro.generos.any { genero -> genero.id == generoId } }
+            } else {
+                libros
+            }
             val ordenarLibrosCalificacion = filteredLibros.sortedByDescending { libro -> libro.calificacion }
             val adapter = (binding.lstPersonas.adapter as LibroAdapter)
             adapter.updateData(ordenarLibrosCalificacion)
@@ -92,7 +99,7 @@ class MainActivity : AppCompatActivity(), LibroAdapter.OnLibroClickListener {
     }
 
     override fun onLibroClick(libro: Libro) {
-        selectedLibro = libro // Actualiza el libro seleccionado cuando se hace clic en un libro
+        selectedLibro = libro
         val intent = Intent(this, LibroDetailActivity::class.java)
         intent.putExtra("libro", libro)
         startActivity(intent)

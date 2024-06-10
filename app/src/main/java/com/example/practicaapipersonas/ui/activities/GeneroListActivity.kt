@@ -43,7 +43,9 @@ class GeneroListActivity : AppCompatActivity(), GeneroAdapter.OnGeneroClickListe
     }
 
     override fun onGeneroClick(genero: Genero) {
-
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("generoId", genero.id)
+        startActivity(intent)
     }
 
 
